@@ -22,9 +22,11 @@ Create the order only if the customer and product are valid.
 1. Clone the project repository
 `git clone https://github.com/HPeroxide-Pe/exercise3_microservices.git`
 2. go inside the root directory
-`cd exercise3_microservices`
+```cd exercise3_microservices```
 3. Use Node Package Manager to install project dependencies
-`npm install`
+```node 
+npm install
+```
 4. Run each file individually in different terminal windows
 ```node
 npm src/customer_service.js
