@@ -20,42 +20,51 @@ Create the order only if the customer and product are valid.
 - DELETE /orders/:orderId: Delete an order.
 ## Installation and Running
 1. Clone the project repository
-`git clone https://github.com/HPeroxide-Pe/exercise3_microservices.git`
+```git clone https://github.com/HPeroxide-Pe/exercise3_microservices.git
+```
 2. go inside the root directory
-```cd exercise3_microservices```
+```
+cd exercise3_microservices
+```
 3. Use Node Package Manager to install project dependencies
 ```node 
 npm install
 ```
 4. Run each file individually in different terminal windows
-```node
+```
 npm src/customer_service.js
 ```
 
-```node
+```
 npm src/product_service.js
 ```
 
-```node
+```
 npm src/order_service.js
 ```
 ### Testing
 using any REST API client, send any HTTP Request using any of the methods stated above, here are some test JSON inputs for the body:
 1. Product
-`{
+```JSON
+{
 	"name": "Nautilus Prime Set",
 	"price": 80,
 	"stock": 69
-}`
+}
+```
 2. Customer
-`{
+```JSON
+{
 	"name": "John Sevagoth Prime",
 	"email": "johnsevagothprime@voidstorms.com",
 	"address": "Veil Proxima St."
-}`
+}
+```
 3. Order
-`{
+```JSON
+{
   "customerId": 0,
   "productId": 0,
   "quantity": 1
-}`
+}
+```
