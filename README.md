@@ -28,20 +28,20 @@ git clone https://github.com/HPeroxide-Pe/exercise3_microservices.git
 cd exercise3_microservices
 ```
 3. Use Node Package Manager to install project dependencies
-```node 
+```
 npm install
 ```
 4. Run each file individually in different terminal windows
 ```
-npm src/customer_service.js
+node src/customer_service.js
 ```
 
 ```
-npm src/product_service.js
+node src/product_service.js
 ```
 
 ```
-npm src/order_service.js
+node src/order_service.js
 ```
 ### Testing
 using any REST API client, send any HTTP Request using any of the methods stated above, here are some test JSON inputs for the body:
