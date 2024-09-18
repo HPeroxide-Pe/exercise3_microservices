@@ -20,7 +20,8 @@ Create the order only if the customer and product are valid.
 - DELETE /orders/:orderId: Delete an order.
 ## Installation and Running
 1. Clone the project repository
-```git clone https://github.com/HPeroxide-Pe/exercise3_microservices.git
+```
+git clone https://github.com/HPeroxide-Pe/exercise3_microservices.git
 ```
 2. go inside the root directory
 ```
