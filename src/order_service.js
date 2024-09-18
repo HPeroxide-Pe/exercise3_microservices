@@ -31,20 +31,21 @@ app.post("/orders",(req, res) => {
           customerName: customerData.name,
           customerAddress: customerData.address,
           quantity: req.body.quantity,
+          totalPrice: productData.price * req.body.quantity
         };
         dataBank.push(order);
         console.log("order created");//testing, pls remove in final
-        res.json(order);
+        res.json(order).status(201);
       }catch{
         console.log("order not created"); //testing, pls remove in final
         res.json(500)
       }
   }).catch((error) => {
-    console.log('product not found', error);
+    console.log('product not found', error); //testing, pls remove in final
     res.status(404).send('product not found');
   })
   }).catch((error) => {
-    console.log('customer not found', error);
+    console.log('customer not found', error); //testing, pls remove in final
     res.status(404).send('customer not found');
   });
   
