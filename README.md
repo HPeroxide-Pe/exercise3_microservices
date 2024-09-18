@@ -26,11 +26,17 @@ Create the order only if the customer and product are valid.
 3. Use Node Package Manager to install project dependencies
 `npm install`
 4. Run each file individually in different terminal windows
-`npm src/customer_service.js`
+```node
+npm src/customer_service.js
+```
 
-`npm src/product_service.js`
+```node
+npm src/product_service.js
+```
 
-`npm src/order_service.js`
+```node
+npm src/order_service.js
+```
 ### Testing
 using any REST API client, send any HTTP Request using any of the methods stated above, here are some test JSON inputs for the body:
 1. Product
