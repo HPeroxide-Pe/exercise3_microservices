@@ -11,7 +11,7 @@ const customerDB = []; // simple array acting as the customer database
 app.post("/customers", (req, res) => {
     const { name, email, address, role, password} = req.body;
     let customerId = customerIdCounter++;
-
+    console.log(customerId);
     if (!name || !email || !address || !role || !password) {
         return res.status(400).send("Missing customer details.");
     }
@@ -53,7 +53,7 @@ app.post("/customers/login", (req, res) => {
 
 
 // Get customer details by ID
-app.get("/customers/:customerId", (req, res) => {
+app.get("/customers/:customerId", verifyJWT, (req, res) => {
     const customer = customerDB[req.params.customerId];
 
     if (!customer) {
@@ -64,7 +64,7 @@ app.get("/customers/:customerId", (req, res) => {
 });
 
 // Update customer information
-app.put("/customers/:customerId", (req, res) => {
+app.put("/customers/:customerId", verifyJWT, verifyRole(["admin"]), (req, res) => {
     const customerId = parseInt(req.params.customerId);
     const customer = customerDB[customerId];
 
@@ -84,7 +84,7 @@ app.put("/customers/:customerId", (req, res) => {
 });
 
 // Delete a customer
-app.delete("/customers/:customerId", (req, res) => {
+app.delete("/customers/:customerId", verifyJWT, verifyRole(["admin"]), (req, res) => {
     const customerId = parseInt(req.params.customerId);
     const customer = customerDB[customerId];
 
@@ -120,7 +120,7 @@ function verifyRole(allowedRoles) {
     return (req, res, next) => {
         const user = req.user;
         if (!allowedRoles.includes(user.role)) {
-            return res.sendStatus(403).json({ message: "Forbidden" });
+            return res.sendStatus(403);
         }
         next();
     }
