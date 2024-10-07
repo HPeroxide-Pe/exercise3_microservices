@@ -11,12 +11,17 @@ apiEndpoints:
   customer_service_api:
     host: localhost
     paths: ['/customers','/customers/*']
+  product_service_api:
+    host: localhost
+    paths: ['/products','/products/*']
 serviceEndpoints:
   # see: http://www.express-gateway.io/docs/configuration/gateway.config.yml/serviceEndpoints
   order_service:
     url: "http://localhost:3003"
   customer_service:
     url: "http://localhost:3002"
+  product_service:
+    url: "http://localhost:3001"
 policies:
   - basic-auth
   - cors
@@ -43,4 +48,12 @@ pipelines:
       - proxy:
           action:
             serviceEndpoint: customer_service
+            changeOrigin: true
+  product_service_line:
+    apiEndpoints:
+      - product_service_api
+    policies:
+      - proxy:
+          action:
+            serviceEndpoint: product_service
             changeOrigin: true

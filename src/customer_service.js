@@ -115,4 +115,14 @@ function verifyJWT(req, res, next) {
         next();
     });
 }
+
+function verifyRole(allowedRoles) {
+    return (req, res, next) => {
+        const user = req.user;
+        if (!allowedRoles.includes(user.role)) {
+            return res.sendStatus(403).json({ message: "Forbidden" });
+        }
+        next();
+    }
+}
 app.listen(3002, () => console.log("Customer service listening on port 3002!"));

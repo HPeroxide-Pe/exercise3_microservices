@@ -10,7 +10,7 @@ const customerURL = 'http://localhost:3002/customers';
 const productURL = 'http://localhost:3001/products';
 let orderIdCounter = 0; // global order counter for id
 const dataBank = []; // we have db at home
-
+let JWT = '';
 //create a new order
 app.post("/orders", verifyJWT,(req, res) => {
   let orderId = orderIdCounter++;
@@ -19,11 +19,15 @@ app.post("/orders", verifyJWT,(req, res) => {
   const customerId = req.user.id;
   const productId = req.body.productId;
   console.log(req.user);
-  axios.get(`${customerURL}/${customerId}`).then((response) => { //Get request for customer service
+  axios.get(`${customerURL}/${customerId}`, headers = { "Authorization": `Bearer ${req.headers}`}).then((response) => { //Get request for customer service
     console.log('customer found', /*response.data //this is to check the response*/);
     let customerData = response.data;
 
-    axios.get(`${productURL}/${productId}`).then((response) => {
+    axios.get(`${productURL}/${productId}`, {
+      headers: {
+        "Authorization": `Bearer ${secret.secret}`
+      }
+    }).then((response) => {
       console.log('product found', /*response.data //this is to check the response*/);
       let productData = response.data;
       try{
@@ -56,7 +60,7 @@ app.post("/orders", verifyJWT,(req, res) => {
 
 
 //get an order
-app.get("/orders/:orderId", (req, res) => {
+app.get("/orders/:orderId", verifyJWT, verifyRole(["admin"]), (req, res) => {
   const order = dataBank[req.params.orderId]
   if(!order){ //checks if an order isn't found
     res.status(404).send("order not found");
@@ -117,4 +121,13 @@ function verifyJWT(req, res, next) {
   });
 }
 
+function verifyRole(allowedRoles) {
+  return (req, res, next) => {
+      const user = req.user;
+      if (!allowedRoles.includes(user.role)) {
+          return res.sendStatus(403).json({ message: "Forbidden" });
+      }
+      next();
+  }
+}
 app.listen(3003, () => console.log("Order service listening on port 3003!"));
