@@ -1,12 +1,15 @@
 const express = require("express");
 const app = express();
+const jwt = require("jsonwebtoken");
+const secret = require("../jwt-token.json");
+
 app.use(express.json());
 
 let productIdCounter = 0; // global product counter for id
 const productDB = []; // a simple array acting as the product database
 
 // Create a new product
-app.post("/products", (req, res) => {
+app.post("/products", verifyJWT, verifyRole(["admin"]), (req, res) => {
     const { name, price, stock } = req.body;
     let productId = productIdCounter++;
 
@@ -43,7 +46,7 @@ app.get("/products/:productId", (req, res) => {
 });
 
 // Update a product
-app.put("/products/:productId", (req, res) => {
+app.put("/products/:productId", verifyJWT, verifyRole(["admin"]), (req, res) => {
     const productId = parseInt(req.params.productId);
     const product = productDB[productId];
 
@@ -62,7 +65,7 @@ app.put("/products/:productId", (req, res) => {
 });
 
 // Delete a product
-app.delete("/products/:productId", (req, res) => {
+app.delete("/products/:productId", verifyJWT, verifyRole(["admin"]), (req, res) => {
     const productId = parseInt(req.params.productId);
     const product = productDB[productId];
 
@@ -80,5 +83,28 @@ app.delete("/products/:productId", (req, res) => {
 
     res.send("Product deleted");
 });
+
+function verifyJWT(req, res, next) {
+    const authHeaders = req.headers["authorization"];
+    const token = authHeaders && authHeaders.split(' ')[1];
+
+    if (token == null) return res.sendStatus(401);
+
+    jwt.verify(token, secret.secret, (err, user) => {
+        if (err) return res.sendStatus(403);
+        req.user = user;
+        next();
+    });
+}
+
+function verifyRole(allowedRoles) {
+    return (req, res, next) => {
+        const user = req.user;
+        if (!allowedRoles.includes(user.role)) {
+            return res.sendStatus(403);
+        }
+        next();
+    }
+}
 
 app.listen(3001, () => console.log("Product service listening on port 3001!"));
