@@ -1,1 +1,3 @@
 node_modules/
+micro-gate/node_modules/
+jwt-token.json

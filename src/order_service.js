@@ -1,6 +1,9 @@
 const express = require("express");
 const app = express();
 const axios = require('axios');
+const jwt = require("jsonwebtoken");
+const secret = require("../jwt-token.json");
+
 app.use(express.json());
 
 const customerURL = 'http://localhost:3002/customers';
@@ -9,13 +12,13 @@ let orderIdCounter = 0; // global order counter for id
 const dataBank = []; // we have db at home
 
 //create a new order
-app.post("/orders",(req, res) => {
+app.post("/orders", verifyJWT,(req, res) => {
   let orderId = orderIdCounter++;
   // let customerData;
   // let productData;
-  const customerId = req.body.customerId;
+  const customerId = req.user.id;
   const productId = req.body.productId;
-
+  console.log(req.user);
   axios.get(`${customerURL}/${customerId}`).then((response) => { //Get request for customer service
     console.log('customer found', /*response.data //this is to check the response*/);
     let customerData = response.data;
@@ -41,11 +44,11 @@ app.post("/orders",(req, res) => {
         res.json(500)
       }
   }).catch((error) => {
-    console.log('product not found', error); //testing, pls remove in final
+    console.log('product not found', /*error*/ ); //testing, pls remove in final
     res.status(404).send('product not found');
   })
   }).catch((error) => {
-    console.log('customer not found', error); //testing, pls remove in final
+    console.log('customer not found', /*error*/); //testing, pls remove in final
     res.status(404).send('customer not found');
   });
   
@@ -100,5 +103,18 @@ app.delete("/orders/:orderId", (req, res) => {
     res.send("order deleted");
   }
 });
+
+function verifyJWT(req, res, next) {
+  const authHeaders = req.headers["authorization"];
+  const token = authHeaders && authHeaders.split(' ')[1];
+
+  if (token == null) return res.sendStatus(401);
+
+  jwt.verify(token, secret.secret, (err, user) => {
+      if (err) return res.sendStatus(403);
+      req.user = user;
+      next();
+  });
+}
 
 app.listen(3003, () => console.log("Order service listening on port 3003!"));
