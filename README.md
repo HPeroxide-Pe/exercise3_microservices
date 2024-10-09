@@ -1,7 +1,7 @@
 # IT3103 Exercise 3: Designing and Building a Microservices API 
 ## Microservice Overview
 1. Product Service 
-- POST /products: Add a new product.
+-- POST /products: Add a new product.
 - GET /products/:productId: Get customer details by ID
 - PUT /products/:productId: Update a product
 - DELETE /products/:productId: delete a product
